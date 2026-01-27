@@ -95,7 +95,6 @@ nav {
     padding: 20px 40px;
     display: flex;
     gap: 120px;
-    align-items: center;
     height: 80px;
     width: 100%;
     background: transparent;
@@ -107,12 +106,77 @@ nav {
         box-shadow 0.4s ease;
 }
 
+.div_links {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: space-around;
+}
+
+#nav_links {
+    display: flex;
+    height: 60px;
+}
+
 /* ESTADO COM SCROLL */
 nav.scrolled {
     background-color: rgba(125, 7, 38, 0.347);
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     height: 60px;
+}
+
+.menu-toggle {
+    width: 32px;
+    height: 22px;
+    position: fixed;
+    cursor: pointer;
+
+    display: none;
+    /* aparece só no mobile */
+}
+
+.menu-toggle span {
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+
+    transition:
+        transform 0.35s ease,
+        top 0.35s ease,
+        opacity 0.25s ease,
+        background-color 0.3s ease;
+
+    border: #e60017 2px solid;
+}
+
+/* posição inicial */
+.menu-toggle span:nth-child(1) {
+    top: 0;
+}
+
+.menu-toggle span:nth-child(2) {
+    top: 10px;
+}
+
+.menu-toggle span:nth-child(3) {
+    top: 20px;
+}
+
+/* ===== ESTADO ABERTO ===== */
+.menu-toggle.active span:nth-child(1) {
+    top: 10px;
+    transform: rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    top: 10px;
+    transform: rotate(-45deg);
 }
 
 .btn {
@@ -265,6 +329,7 @@ nav.scrolled {
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
+    text-wrap: nowrap;
 }
 
 .btn_cta {
@@ -636,6 +701,7 @@ nav.scrolled {
     pointer-events: none;
 }
 
+
 .circuit-base {
     fill: none;
     stroke: rgba(255, 0, 60, 0.18);
@@ -681,6 +747,97 @@ nav.scrolled {
 
 @media (max-width: 900px) {
 
+    nav {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-main);
+        justify-content: center;
+        padding: 15px;
+        height: 65px;
+        gap: 10px;
+    }
+
+    .menu-toggle {
+        width: 35px;
+        height: 30px;
+        cursor: pointer;
+
+        display: none;
+        /* aparece só no mobile */
+    }
+
+    .menu-toggle span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--text-main);
+        border-radius: 2px;
+
+        transition:
+            transform 0.35s ease,
+            top 0.35s ease,
+            opacity 0.25s ease,
+            background-color 0.3s ease;
+    }
+
+    /* posição inicial */
+    .menu-toggle span:nth-child(1) {
+        top: 0;
+    }
+
+    .menu-toggle span:nth-child(2) {
+        top: 10px;
+    }
+
+    .menu-toggle span:nth-child(3) {
+        top: 20px;
+    }
+
+    /* ===== ESTADO ABERTO ===== */
+    .menu-toggle.active span:nth-child(1) {
+        top: 10px;
+        transform: rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        top: 10px;
+        transform: rotate(-45deg);
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+
+    .nav_logo {
+        display: none;
+    }
+
+    .nav_links {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+        align-items: start;
+        padding-left: 30px;
+        /* transform: translateX(-100%); */
+        transform: translateY(60px);
+        display: none;
+    }
+
+
+
+    .btn_whatsapp {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
     .about-cards {
         grid-template-columns: 1fr;
     }
@@ -689,5 +846,98 @@ nav.scrolled {
         text-align: center;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .div_links {
+        flex-direction: column;
+        height: fit-content;
+        overflow: hidden;
+        gap: 5px;
+    }
+
+    #nav_links {
+        position: fixed;
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        transition: 1s;
+        overflow: hidden;
+        padding: 0;
+        gap: 0;
+    }
+
+    #nav_links.open {
+        height: 160px;
+    }
+
+    .nav_btn::after {
+        width: 100%;
+        left: 0;
+        background: #ff003cab;
+    }
+
+    .carousel-img {
+        height: 100%;
+    }
+
+    #lbl_1 {
+        width: 80%;
+        padding: 10px;
+        font-size: 25px;
+        letter-spacing: 5px;
+    }
+
+    #lbl_2 {
+        width: 80%;
+        padding: 10px;
+        font-size: 25px;
+        letter-spacing: 5px;
+    }
+
+    #lbl_3 {
+        width: 80%;
+        padding: 10px;
+        font-size: 25px;
+        letter-spacing: 5px;
+    }
+
+    .title {
+        font-size: 50px;
+        padding: 40px;
+    }
+
+    .cta {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .circuit-right {
+        display: none;
+    }
+
+    .btn_cta {
+        color: var(--text-main);
+    }
+
+    .btn_cta::before {
+        background:
+            linear-gradient(var(--text-main), var(--text-main)) top left,
+            linear-gradient(var(--text-main), var(--text-main)) top right,
+            linear-gradient(var(--text-main), var(--text-main)) bottom right,
+            linear-gradient(var(--text-main), var(--text-main)) bottom left;
+
+        background-size:
+            0% 2px,
+            2px 0%,
+            0% 2px,
+            2px 0%;
+
+        background-repeat: no-repeat;
     }
 }

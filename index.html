@@ -10,27 +10,34 @@
 
 <body>
     <nav>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="div_logo">
             <label for="">
                 <img class="nav_logo" src=".\SRC\Logo.png" alt="Fail">
             </label>
         </div>
 
-        <div class="nav_links">
-            <label class="btn nav_btn" for="">
-                Sobre
-            </label>
-            <label class="btn nav_btn" for="">
-                Serviços
-            </label>
-            <label class="btn nav_btn" for="">
-                Contato
-            </label>
-            <label class="btn btn_whatsapp" for="">
-                <i></i>
-                Falar no WhatsApp
-            </label>
+        <div id="nav_links" class="nav_links">
+            <div class="div_links">
+                <label class="btn nav_btn" for="">
+                    Sobre
+                </label>
+                <label class="btn nav_btn" for="">
+                    Serviços
+                </label>
+                <label class="btn nav_btn" for="">
+                    Contato
+                </label>
+            </div>
         </div>
+        <label class="btn btn_whatsapp" for="">
+            <i></i>
+            Falar no WhatsApp
+        </label>
     </nav>
 
     <!-- ===== HERO / APRESENTAÇÃO ===== -->
@@ -216,6 +223,7 @@
     <script>
 
         function rebuildCTA(scope = document) {
+
             scope.querySelectorAll('.btn_cta').forEach(btn => {
 
                 // remove tudo
@@ -321,13 +329,20 @@
 
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > window.innerHeight * 0.6) {
+            if (window.scrollY > window.innerHeight * 0.6 && window.innerWidth >= 900) {
                 nav_menu.classList.add('scrolled');
             } else {
                 nav_menu.classList.remove('scrolled');
             }
         });
 
+        const menuToggle = document.getElementById('menuToggle');
+        const nav_links = document.getElementById('nav_links');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            nav_links.classList.toggle('open');
+        });
 
 
     </script>
