@@ -228,6 +228,7 @@ nav.scrolled {
 }
 
 .btn_whatsapp {
+    height: 100%;
     border-radius: 75px;
     background: linear-gradient(135deg, var(--accent-red), var(--accent-pink));
     padding: 0 12px;
@@ -978,8 +979,8 @@ nav.scrolled {
     }
 
     .title {
-        font-size: 50px;
-        padding: 40px;
+        font-size: 30px;
+        padding: 20px 40px;
     }
 
     .about-header h2 {
@@ -1025,5 +1026,14 @@ nav.scrolled {
             2px 0%;
 
         background-repeat: no-repeat;
+    }
+
+    .contact-info {
+        display: flex;
+        justify-content: start;
+        padding: 0 40px;
+        gap: 0px;
+        flex-wrap: wrap;
+        color: var(--text-main);
     }
 }

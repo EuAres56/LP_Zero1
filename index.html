@@ -23,35 +23,36 @@
             <span></span>
         </div>
         <div class="div_logo">
-            <label for="">
-                <img class="nav_logo_1" src=".\SRC\Logo.png" alt="Fail">
-                <img class="nav_logo_2" src=".\SRC\Logo_zero1.png" alt="Fail">
-            </label>
+            <a href="#home">
+                <img class="nav_logo_1" src=".\SRC\Logo.png" alt="Logo Zero 1">
+                <img class="nav_logo_2" src=".\SRC\Logo_zero1.png" alt="Logo Zero 1">
+            </a>
         </div>
 
         <div id="nav_links" class="nav_links">
             <div class="div_links">
-                <label class="btn nav_btn" for="">
+                <a href="#sobre" class="btn nav_btn" data-scroll="sobre">
                     Sobre
-                </label>
-                <label class="btn nav_btn" for="">
+                </a>
+                <a href="#servicos" class="btn nav_btn" data-scroll="servicos">
                     Serviços
-                </label>
-                <label class="btn nav_btn" for="">
+                </a>
+                <a href="#contato" class="btn nav_btn" data-scroll="contato">
                     Contato
-                </label>
+                </a>
             </div>
         </div>
-        <label class="btn btn_whatsapp" for="">
+
+        <a class="btn btn_whatsapp" href="https://wa.me/5574981008585" target="_blank" rel="noopener">
             <span class="ico ico-whatsapp"></span>
             <span class="text-whatsapp">
                 Falar no WhatsApp
             </span>
-        </label>
+        </a>
     </nav>
 
     <!-- ===== HERO / APRESENTAÇÃO ===== -->
-    <section class="hero main-section">
+    <section class="hero main-section" id="home">
         <div class="carousel">
             <div class="carousel-track" id="carouselTrack">
                 <div class="carousel-slide">
@@ -113,7 +114,7 @@
     </section>
 
     <!-- ===== SOBRE NÓS ===== -->
-    <section class="about-z1 main-section">
+    <section class="about-z1 main-section" id="sobre">
         <div class="about-header">
             <h2>Somos a <strong style="color: var(--accent-pink);">Zero 1</strong></h2>
             <p>
@@ -149,7 +150,7 @@
     </section>
 
     <!-- ===== CALL TO ACTION ===== -->
-    <section class="main-section section-cta">
+    <section class="main-section section-cta" id="servicos">
         <svg class="circuit-bg circuit-right" viewBox="0 0 1200 600" preserveAspectRatio="none">
 
 
@@ -175,9 +176,7 @@
 
         </svg>
         <div class="title">
-            <label for="">
-                Levando sua empresa para o futuro
-            </label>
+            Levando sua empresa para o futuro
         </div>
         <div class="cta">
 
@@ -222,7 +221,7 @@
 
     </section>
     <!-- ===== CONTATO ===== -->
-    <section class="contact">
+    <section class="contact" id="contato">
         <div class="contact-info">
             <div>
                 <p>zero1.solucoestec@gmail.com</p>
@@ -358,6 +357,28 @@
         });
 
 
+        document.querySelectorAll('[data-scroll]').forEach(btn => {
+            btn.addEventListener('click', () => {
+
+                const targetId = btn.getAttribute('data-scroll');
+                const target = document.getElementById(targetId);
+
+                if (!target) return;
+
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const targetPosition = target.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = targetPosition - navHeight - 10;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // fecha menu mobile
+                nav_links.classList.remove('open');
+                menuToggle.classList.remove('active');
+            });
+        });
     </script>
 
 </body>
