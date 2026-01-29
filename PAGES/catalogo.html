@@ -21,6 +21,23 @@
             color: #fff;
         }
 
+        .filters {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: none;
+            min-width: 220px;
+            font-size: 14px;
+        }
+
         main {
             max-width: 1200px;
             margin: 40px auto;
@@ -66,7 +83,17 @@
             font-weight: bold;
             font-size: 18px;
             color: #0a7;
+        }
+
+        .buy {
             margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            background: #25d366;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
         }
 
         .loading,
@@ -83,6 +110,13 @@
     <header>
         <h1>Nossos Produtos</h1>
         <p>Confira nossa vitrine</p>
+
+        <div class="filters">
+            <input type="text" id="search" placeholder="Buscar produto..." />
+            <select id="category">
+                <option value="">Todas as categorias</option>
+            </select>
+        </div>
     </header>
 
     <main>
@@ -91,63 +125,138 @@
     </main>
 
     <script>
-        // 🔁 SUBSTITUA PELA URL DA SUA PLANILHA PUBLICADA EM CSV
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQXtypDX-PBtHQgWfAPNAoCFb_dAw__otSTERCAL3R2pgi_br2WV7UC1d7PaZ9kfEahfLuh6f3ocNL9/pub?gid=0&single=true&output=csv'
+        const SHEET_URL =
+            'https://docs.google.com/spreadsheets/d/e/2PACX-1vQXtypDX-PBtHQgWfAPNAoCFb_dAw__otSTERCAL3R2pgi_br2WV7UC1d7PaZ9kfEahfLuh6f3ocNL9/pub?gid=0&single=true&output=csv'
 
         const statusEl = document.getElementById('status')
         const produtosEl = document.getElementById('produtos')
+        const searchEl = document.getElementById('search')
+        const categoryEl = document.getElementById('category')
+
+        let produtos = []
+
+        function parseCSV(text) {
+            const linhas = []
+            let linha = []
+            let campo = ''
+            let dentroAspas = false
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i]
+                const next = text[i + 1]
+
+                if (char === '"' && dentroAspas && next === '"') {
+                    campo += '"'
+                    i++
+                } else if (char === '"') {
+                    dentroAspas = !dentroAspas
+                } else if (char === ',' && !dentroAspas) {
+                    linha.push(campo)
+                    campo = ''
+                } else if (char === '\n' && !dentroAspas) {
+                    linha.push(campo)
+                    linhas.push(linha)
+                    linha = []
+                    campo = ''
+                } else {
+                    campo += char
+                }
+            }
+
+            if (campo) linha.push(campo)
+            if (linha.length) linhas.push(linha)
+            return linhas
+        }
+
+        function render() {
+            produtosEl.innerHTML = ''
+
+            const termo = searchEl.value.toLowerCase()
+            const categoria = categoryEl.value
+
+            const filtrados = produtos.filter(p => {
+                const nomeMatch = p.Produto.toLowerCase().includes(termo)
+                const categoriaMatch = !categoria || p.categoria === categoria
+                return nomeMatch && categoriaMatch
+            })
+
+            if (!filtrados.length) {
+                statusEl.style.display = 'block'
+                statusEl.textContent = 'Nenhum produto encontrado.'
+                return
+            }
+
+            statusEl.style.display = 'none'
+
+            filtrados.forEach(item => {
+                const preco = Number(item.Valor).toFixed(2).replace('.', ',')
+
+                const card = document.createElement('article')
+                card.className = 'card'
+
+                const img = document.createElement('img')
+                img.src = encodeURI(item.Imagem)
+                img.alt = item.Produto
+                img.loading = 'lazy'
+
+                const body = document.createElement('div')
+                body.className = 'card-body'
+
+                const msg = encodeURIComponent(
+                    `Olá, tenho interesse no produto: ${item.Produto}`
+                )
+
+                body.innerHTML = `
+          <h3>${item.Produto}</h3>
+          <div class="price">R$ ${preco}</div>
+          <a class="buy" target="_blank"
+             href="https://wa.me/5574981008585?text=${msg}">
+            Comprar no WhatsApp
+          </a>
+        `
+
+                card.appendChild(img)
+                card.appendChild(body)
+                produtosEl.appendChild(card)
+            })
+        }
 
         fetch(SHEET_URL)
             .then(res => res.text())
             .then(csv => {
-                const linhas = csv.trim().split('\n')
-                const cabecalho = linhas.shift().split(',')
+                const linhas = parseCSV(csv.trim())
+                const cabecalho = linhas.shift()
 
-                let exibiuAlgo = false
+                const categorias = new Set()
 
-                linhas.forEach(linha => {
-                    const dados = linha.split(',')
-
+                linhas.forEach(dados => {
                     const item = {}
                     cabecalho.forEach((col, i) => {
-                        item[col.trim()] = dados[i]
-                            ?.trim()
-                            .replace(/^"|"$/g, '')   // remove aspas no início/fim
+                        item[col.trim()] = (dados[i] || '').replace(/^"|"$/g, '').trim()
                     })
 
-                    const estoque = Number(item.estoque)
-                    if (estoque <= 0) return
+                    if (Number(item.estoque) <= 0) return
 
-                    exibiuAlgo = true
-
-                    const preco = Number(item.Valor).toFixed(2).replace('.', ',')
-
-                    const card = document.createElement('article')
-                    card.className = 'card'
-
-                    card.innerHTML = `
-            <img src="${item.Imagem}" alt="${item.Produto}">
-            <div class="card-body">
-              <h3>${item.Produto}</h3>
-              <div class="price">R$ ${preco}</div>
-            </div>
-          `
-
-                    produtosEl.appendChild(card)
+                    produtos.push(item)
+                    categorias.add(item.categoria)
                 })
 
-                statusEl.style.display = 'none'
+                categorias.forEach(cat => {
+                    const opt = document.createElement('option')
+                    opt.value = cat
+                    opt.textContent = cat
+                    categoryEl.appendChild(opt)
+                })
 
-                if (!exibiuAlgo) {
-                    statusEl.textContent = 'Nenhum produto disponível no momento.'
-                    statusEl.style.display = 'block'
-                }
+                render()
             })
-            .catch(err => {
-                console.error(err)
-                statusEl.textContent = 'Erro ao carregar os produtos.'
+            .catch(() => {
+                statusEl.textContent = 'Erro ao carregar produtos.'
                 statusEl.className = 'error'
             })
+
+        searchEl.addEventListener('input', render)
+        categoryEl.addEventListener('change', render)
     </script>
 
 </body>
